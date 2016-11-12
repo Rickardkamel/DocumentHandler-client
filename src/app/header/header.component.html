@@ -1,0 +1,60 @@
+<div *ngIf="loggedIn" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+               </button>
+            <a routerLink="['/']" class="navbar-brand">{{title}}</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown dropdown-inverse">
+                    <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Verktyg <span class="caret"></span></a>
+                    <ul style="cursor: pointer;" class="dropdown-menu">
+                        <li><a (click)="showToolModal()">Skapa ny region</a></li>
+                        <!--<li role="separator" class="divider"></li>
+                        <li><a href="#">Skapa nytt kärl</a></li>-->
+                    </ul>
+                </li>
+                <li [routerLinkActive]="['active']"><a routerLink='regions'>Regioner</a></li>
+                <li [routerLinkActive]="['active']"><a routerLink='order/create'>Skapa order</a></li>
+                <li [routerLinkActive]="['active']"><a routerLink='history'>Historik</a></li>
+                <li [routerLinkActive]="['active']"><a class="logout " aria-hidden="true" (click)="logout()"><i class="fa fa-sign-out fa-1x"></i>Logga ut</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div bsModal #toolModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-label="Close" (click)="hideToolModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                <h4 class="modal-title">Skapa ny region</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <form [formGroup]="createRegionForm" (ngSubmit)="onCreateRegion(createRegionForm.value.regionName)">
+                                    <div class="form-group col-lg-9 col-md-9">
+                                        <input required formControlName="regionName" type="text" class="form-control" placeholder="Regions namn">
+                                    </div>
+                                    <div class="col-lg-3 col-md-3">
+                                        <button [disabled]="!createRegionForm.valid" type="submit" class="btn btn-success">Skapa</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+<div style="margin-top: 70px" class="history container">
+	<div class="row">
+		<div class="col-lg-6 col-lg-offset-1">
+			<div class="row">
+				<form [formGroup]="searchCriteriaForm" (ngSubmit)="onDetailedSearch(f.value)" #f="ngForm">
+					<div class="col-lg-offset-2 col-lg-8 input-group">
+						<select [(ngModel)]="selectStartValue" class="pull-left form-control" formControlName="selectedParam" id="search-select">
+                                <option selected value="customerName">Kundnamn</option>
+                                <option value="customerCity">Stad</option>
+                                <option value="id">Löpnummer</option>
+                            </select>
+						<span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+						<input required formControlName="searchParam" type="text" class="form-control" placeholder="Söktext">
+
+
+					</div>
+					<br>
+					<div class="col-md-offset-5 ">
+						<button type="submit" class="col-md-3 btn btn-info">Sök</button>
+					</div>
+				</form>
+			</div>
+			<br/>
+			<hr>
+		</div>
+		<button *ngIf="showingSpecificReport" (click)="showAllReports()" type="submit" class=" pull-right btn btn-primary">Visa alla</button>
+
+		<!--<div>
+      <input [(ngModel)]="selectedCustomer" [typeahead]="customerComplex" [typeaheadOptionField]="'name'" (typeaheadOnSelect)="onSelectedCustomer($event)"
+        class="form-control pull-left input-space" placeholder="Sök efter kundnamn">
+
+    </div>-->
+		<div class="panel panel-default col-lg-9">
+			<table class="table table-striped" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="20">
+				<thead>
+					<tr>
+						<th style="width: 20%">
+							<mfDefaultSorter by="createdDate">Skapad</mfDefaultSorter>
+						</th>
+						<th style="width: 25%">
+							<mfDefaultSorter by="customer.name">Kundnamn</mfDefaultSorter>
+						</th>
+						<th style="width: 20%">
+							<mfDefaultSorter by="customer.city">Stad</mfDefaultSorter>
+						</th>
+						<th style="width: 20%">
+							<mfDefaultSorter by="region.name">Region</mfDefaultSorter>
+						</th>
+						<th style="width: 5%">
+							<mfDefaultSorter by="id">Löpnr.</mfDefaultSorter>
+						</th>
+						<th style="width: 10%">
+							<mfDefaultSorter by="lastEditBy">Ändrad av</mfDefaultSorter>
+						</th>
+						<th style="width: 10%">
+							<mfDefaultSorter by="approved">Godkänd</mfDefaultSorter>
+						</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="m-pointer" *ngFor="let report of mf.data" (click)="selectReport(report);selectedRow(report.id)" [ngClass]="{selected:report.id===row}">
+						<td>{{report.createdDate | date:'y-MM-dd' }}</td>
+						<td>{{report.customer.name}}</td>
+						<td>{{report.customer.city}}</td>
+						<td>{{report.region.name}}</td>
+						<td>{{report.id}}</td>
+						<td>{{report.lastEditBy}}</td>
+						<td class="center" *ngIf="report.approved"><i class="green-icon fa fa-check fa-2" aria-hidden="true"></i></td>
+						<td class="center" *ngIf="!report.approved"><i class="red-icon fa fa-times fa-2" aria-hidden="true"></i></td>
+						<td (click)="printDocument(report)"><i style="cursor: pointer;" class="fa fa-print fa-2x" aria-hidden="true"></i></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="9">
+							<mfBootstrapPaginator [rowsOnPageSet]="[20,50,100]"></mfBootstrapPaginator>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div *ngIf="selectedReport" class="panel panel-default col-lg-3">
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
+						<label for="customerNumber">Kundnamn</label>
+						<input disabled value="{{selectedReport.customer.name}}" type="text" class="form-control" id="customerNumber">
+					</div>
+					<div class="form-group">
+						<label for="inputInfo">Info</label>
+						<input disabled value="{{selectedReport.info}}" type="text" class="form-control" id="inputInfo" placeholder="Info">
+					</div>
+					<a *ngIf="!selectedReport.approved" [routerLink]="['/order/edit', selectedReport.id]" type="submit" class="btn btn-primary pull-left">Redigera dokument</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

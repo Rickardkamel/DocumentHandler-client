@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor/globals';
 
-export class DocumentHandlerClientPage {
+export class MigrationProjectPage {
   navigateTo() {
     return browser.get('/');
   }

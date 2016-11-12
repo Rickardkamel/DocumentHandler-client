@@ -1,10 +1,10 @@
-import { DocumentHandlerClientPage } from './app.po';
+import { MigrationProjectPage } from './app.po';
 
-describe('document-handler-client App', function() {
-  let page: DocumentHandlerClientPage;
+describe('migration-project App', function() {
+  let page: MigrationProjectPage;
 
   beforeEach(() => {
-    page = new DocumentHandlerClientPage();
+    page = new MigrationProjectPage();
   });
 
   it('should display message saying app works', () => {

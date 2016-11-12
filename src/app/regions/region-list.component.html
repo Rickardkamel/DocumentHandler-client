@@ -1,0 +1,89 @@
+<div class="region-details">
+  <div class="container">
+    <div class="row">
+      <div class="jumbotron region-jumbo">
+        <h1 class="text-center">{{region?.name}} </h1>
+        <p class="text-center"> Totala pallplatser {{totalPalletSpace}}</p>
+      </div>
+      <div class="col-xs-12 col-lg-8">
+        <div class="panel panel-default">
+          <table class="table table-striped" [mfData]="regionReports" #mf="mfDataTable" >
+<!--[mfRowsOnPage]="10"-->
+            <thead>
+              <tr>
+                <th style="width: 10%">
+                </th>
+                <th style="width: 10%">
+                  <mfDefaultSorter by="id">Löpnummer</mfDefaultSorter>
+                </th>
+                <th style="width: 50%">
+                  <mfDefaultSorter by="customer.name">Kund</mfDefaultSorter>
+                </th>
+                <th style="width: 10%">
+                  <mfDefaultSorter by="createdDate">Skapad</mfDefaultSorter>
+                </th>
+                <th style="width: 10%">
+                  <mfDefaultSorter by="">Pallplatser</mfDefaultSorter>
+                </th>
+                <th style="width: 10%">
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let report of regionReports; let i = index;" (click)="selectRegion(report);selectedRow(report.id)" [ngClass]="{selected:report.id===row}">
+                <td>
+                  <input class="chbox" type="checkbox" [ngModel]="report.approved" (change)="updateCheckValue(report)">
+                </td>
+                <td>{{report.id}}</td>
+                <td [style.color]="isDateDayOld(report.createdDate) ? 'red' : '' ">{{report.customer.name }}</td>
+                <td>{{report.createdDate | date : 'shortDate'}}</td>
+                <td>{{report.articles | sumPalletSpace}}</td>
+                <td (click)="printDocument(report)"><i style="cursor: pointer;" class="fa fa-print fa-2x" aria-hidden="true"></i></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">
+                  <!--<mfBootstrapPaginator [rowsOnPageSet]="[10,20,50]"></mfBootstrapPaginator>-->
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <button (click)="getCheckedReports()" [disabled]="approvedValue" class="btn btn-success pull-right" type="submit">Godkänn</button>
+      </div>
+      <div *ngIf="selectedReport" class="panel panel-default col-lg-4">
+        <div class="panel-body">
+          <form>
+            <div class="form-group">
+              <label for="customerNumber">Kundnamn</label>
+              <input disabled value="{{selectedReport.customer.name}}" type="text" class="form-control" id="customerNumber">
+            </div>
+            <div class="form-group">
+              <label for="inputInfo">Info</label>
+              <input disabled value="{{selectedReport.info}}" type="text" class="form-control" id="inputInfo" placeholder="Info">
+            </div>
+            <div class="form-group">
+              <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="true">
+                    {{selectedReport.region.name}}
+             <span class="caret"></span>
+            </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                  <li (click)="changeRegion(region)" *ngFor="let region of regions">
+                    <a style="cursor:pointer;">
+                      {{region.name}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <button (click)="onSave()" type="submit" class="btn btn-primary pull-left">Spara</button>
+            <a [routerLink]="['/order/edit', selectedReport.id]" type="submit" class="btn btn-primary pull-right">Redigera dokument</a>
+            <!--<button (click)="getTotalPalletSpace(regionReports.articles)" type="submit" class="btn btn-primary pull-right">Spara</button>-->
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

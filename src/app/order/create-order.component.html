@@ -1,0 +1,167 @@
+<div class="order-form ">
+	<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+		<div class="panel panel-default tag-box tag-box-v3 form-page ">
+			<div class="has-header panel-body">
+				<div class="container">
+
+					<div class="headline">
+						<h2 class="title">Skapa nytt transportdokument</h2>
+						<button (click)="onSave()" type="submit" class="btn btn-primary pull-right">Tomt dokument</button>
+					</div>
+
+					<div class="margin-bottom-40"></div>
+					<div class="col-lg-offset-2 col-lg-8 panel panel-default">
+						<div class="panel-body">
+							<div class=" row sender-elm">
+								<div class="col-lg-12 col-sm-12 col-xs-12">
+									<div class="col-lg-4 col-sm-4 col-xs-4">
+										<label>Best.dat</label>
+										<input required #ordDate value='{{ formDate | date:"yyyy-MM-dd" }}' (input)="onInput(ordDate.value)" formControlName="orderedDate"
+											type="date" id="orderedDate" class="form-control input-space" placeholder="Best.dat">
+									</div>
+									<div class="col-lg-4 col-sm-4 col-xs-4 center img-res">
+										<img src="./assets/images/customer.png">
+									</div>
+									<div class="col-lg-offset-2 col-lg-2 col-sm-offset-2 col-sm-2 col-xs-offset-2 col-xs-2 center">
+										<label>Löpnummer: <span>{{latestReportId + 1}}</span></label>
+									</div>
+								</div>
+								<div class="col-lg-12 col-sm-12 col-xs-12">
+									<!-- Customer -->
+									<div formGroupName="customer" class="col-lg-5 col-sm-5 col-xs-5 input-border">
+										<label> Avsändare </label>
+										<input [ngModel]="customer.custNumber" formControlName="custNumber" type="text" class="form-control input-space" [typeahead]="customerComplex"
+											(typeaheadOnSelect)="onSelectedCustomer($event)" [typeaheadOptionField]="'custNumber'" [typeaheadMinLength]="3" tabindex="1"
+											placeholder="Kundnr." required>
+										<input [ngModel]="customer.name" formControlName="name" type="text" class="form-control input-space" [typeahead]="customerComplex"
+											(typeaheadOnSelect)="onSelectedCustomer($event)" [typeaheadMinLength]="3" [typeaheadOptionField]="'name'" placeholder="Kundnamn" tabindex="2"
+											required>
+										<input [readonly]="true" [(ngModel)]="customer.adress" formControlName="adress" type="text" class="form-control input-space"
+											placeholder="Adress" required>
+										<input [readonly]="true" [(ngModel)]="customer.city" formControlName="city" type="text" class="form-control input-space"
+											placeholder="Postort" required>
+										<input [readonly]="true" [(ngModel)]="customer.corporateIdentity" formControlName="corporateIdentity" type="text" class="form-control input-space"
+											placeholder="Org.nr" required>
+										<input [readonly]="true" [(ngModel)]="customer.tel" formControlName="tel" type="tel" class="form-control input-space"
+											placeholder="Tel.nr" required>
+									</div>
+									<!-- Receiver -->
+									<div formGroupName="reciever" class="col-lg-5 col-lg-offset-2 col-sm-offset-2 col-sm-5 col-xs-offset-2 col-xs-5 input-border">
+										<label> Mottagare </label>
+										<span class="checkbox">
+											<label><input type="checkbox" checked [value]="cbReciever"  [(ngModel)]="cbReciever" [ngModelOptions]="{standalone: true}" (change)="recieverChanged(!cbReciever)">Customer</label>
+										</span>
+										<input [(ngModel)]="reciever.name" (keyup)="0" formControlName="name" type="text" class="form-control input-space" placeholder="Företagsnamn"
+											required>
+										<input [(ngModel)]="reciever.adress" formControlName="adress" type="text" class="form-control input-space" placeholder="Adress"
+											required>
+										<input [(ngModel)]="reciever.city" formControlName="city" type="text" class="form-control input-space" placeholder="Postort"
+											required>
+										<input [(ngModel)]="reciever.corporateIdentity" formControlName="corporateIdentity" type="text" class="form-control input-space"
+											placeholder="Org.nr" required>
+									</div>
+									<!-- Transporter -->
+									<!--<div formGroupName="transporter" class="col-lg-5 col-lg-offset-2 col-sm-offset-2 col-sm-5 col-xs-offset-2 col-xs-5 input-border">
+										<label> Transportör </label>
+										<span class="checkbox">
+										<label><input type="checkbox" checked [value]="cbTransporter"  [(ngModel)]="cbTransporter" [ngModelOptions]="{standalone: true}" (change)="transporterChanged(!cbTransporter)">Customer</label>
+									</span>
+										<input [(ngModel)]="transporter.name" formControlName="name" type="text" class="form-control input-space" placeholder="Företagsnamn"
+											required>
+										<input [(ngModel)]="transporter.adress" formControlName="adress" type="text" class="form-control input-space" placeholder="Adress"
+											required>
+										<input [(ngModel)]="transporter.city" formControlName="city" type="text" class="form-control input-space" placeholder="Postort"
+											required>
+										<input [(ngModel)]="transporter.corporateIdentity" formControlName="corporateIdentity" type="text" class="form-control input-space"
+											placeholder="Org.nr" required>
+									</div>-->
+								</div>
+								<!-- Extra time / Region / Info -->
+								<div class="col-lg-11 col-sm-11 col-xs-11">
+									<!--<div class="col-lg-4 col-sm-4 col-xs-4 ex-time">
+									<textarea placeholder="Extra tid:" disabled class="form-control input-space" rows="3" cols="3"></textarea>
+								</div>-->
+									<div class="col-lg-5 col-sm-5 col-xs-5">
+										<label>Region</label>
+										<select formControlName="region" class="form-control input-space" tabindex="3" required>
+									<option value="" selected disabled>Välj region</option>
+										<option *ngFor='let region of regions' [ngValue]="region">{{region.name}}</option>
+									</select>
+									</div>
+
+									<div class="col-lg-12 col-sm-12 col-xs-12">
+										<textarea type="text" formControlName="info" placeholder="Info:" class="form-control input-space" rows="4" cols="3" tabindex="4"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- New article -->
+					<div formArrayName="articles">
+						<div class="col-lg-offset-2 col-lg-8 panel panel-default" *ngFor="let article of myForm.controls.articles.controls; let i = index;">
+							<div class="panel-body">
+								<a class="btn btn-xs btn-danger input-space btn-remove-article" (click)="removeRow(i)" role="button">X</a>
+								<div class=" row sender-elm">
+									<div class="table-responsive">
+										<table class="table">
+											<caption class="table-title"><strong>Artikel {{i+1}}</strong></caption>
+											<thead>
+											</thead>
+											<tbody>
+												<tr formGroupName="{{i}}" class="col-lg-12 col-sm-12 col-xs-12 table-input table-border">
+													<!-- Waste -->
+													<td formGroupName="waste" class="col-lg-6 col-sm-6 col-xs-6">
+														<br>
+														<input [value]="myForm.value.articles[i].waste.id" formControlName="id" type="text" class="form-control input-space art-input" tabindex="{{i>0 ? (5+6)*i : i+5}}"
+															style="display: inherit;" placeholder="Art.nr" [typeaheadOptionsLimit]="5" [typeahead]="wasteComplex" (typeaheadOnSelect)="onSelectedArticle($event, [i])"
+															[typeaheadOptionField]="'id'" required>
+														<input hidden [value]="myForm.value.articles[i].wasteId" formControlName="id" type="text">
+														<input [value]="myForm.value.articles[i].waste.text" formControlName="text" type="text" class="form-control input-space art-name-input" tabindex="{{i>0 ? (6+6)*i : i+6}}"
+															style="display: inherit;" placeholder="Avfallsnamn" [typeaheadOptionsLimit]="5" [typeahead]="wasteComplex"
+															(typeaheadOnSelect)="onSelectedArticle($event, [i])" [typeaheadOptionField]="'text'" required>
+														<!--<span value="article.europeanWasteCatalogueCode">{{myForm.value.articles[i].waste.europeanWasteCatalogueCode}}</span>-->
+														<p>
+															<span value="article.unTextGroup">{{myForm.value.articles[i].waste.unTextGroup}}</span>
+														</p>
+													</td>
+													<!-- Vessel -->
+													<td formGroupName="vessel" class="col-lg-3 col-sm-3 col-xs-3">
+														<span style="font-size: 10px;">Kärl</span>
+														<input formControlName="type" type="text" class="form-control" [typeaheadOptionsLimit]="4" [typeahead]="vesselComplex" (typeaheadOnSelect)="onSelectedVessel($event.item, [i])"
+															[typeaheadOptionField]="'type'" tabindex="{{i>0 ? (7+6)*i : i+7}}">
+													</td>
+													<!-- Quantity/Exchange -->
+													<td class="col-lg-1 col-sm-1 col-xs-1">
+														<span style="font-size: 10px;" class="">Antal</span>
+														<input formControlName="quantity" type="text" class="form-control"  tabindex="{{i>0 ? (8+6)*i : i+8}}">
+														<span style="font-size: 10px;" class="">Byte</span>
+														<input formControlName="exchange" type="text" class="form-control"  tabindex="{{i>0 ? (9+6)*i : i+9}}">
+													</td>
+													<!-- Article Info -->
+													<td class="col-lg-2 col-sm-2 col-xs-2">
+														<span style="font-size: 10px;" class="">Info</span>
+														<textarea formControlName="info" maxlength="30" style="font-size: 10px;resize: none;" type="text" class="form-control" maxlength="200" tabindex="{{i>0 ? (10+6)*i : i+10}}"
+															rows="5" cols="5"></textarea>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12 col-sm-12 col-xs-12">
+						<a class="btn btn-primary btn-add-article col-lg-offset-4 col-xs-offset-4 col-md-offset-4 col-lg-4  col-xs-4 col-md-4" tabindex="200"
+							(click)="addRow()" role="button">Lägg till ny artikel</a>
+					</div>
+				</div>
+				<div class="col-lg-12 col-sm-12 col-xs-12">
+					<button type="submit" style="margin-top: 10px;" class="btn btn-success col-lg-offset-4 col-xs-offset-4 col-md-offset-4 col-lg-4  col-xs-4 col-md-4" tabindex="201">Spara</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
